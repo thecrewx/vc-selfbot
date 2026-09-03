@@ -34,7 +34,7 @@ npm -v
 
 ```bash
 # 1. Clone
-git clone https://github.com/yourusername/vc-selfbot.git
+git clone https://github.com/thecrewx/vc-selfbot.git
 cd vc-selfbot
 
 # 2. Install dependencies
