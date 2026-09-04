@@ -1,241 +1,161 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.0.67-blueviolet?style=for-the-badge" alt="Version">
-  <img src="https://img.shields.io/badge/Node.js-16+-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js">
-  <img src="https://img.shields.io/badge/discord.js--selfbot--v13-3.7.1-7289DA?style=for-the-badge&logo=discord&logoColor=white" alt="Discord.js">
-  <img src="https://img.shields.io/badge/made%20by-thecrewx-ff69b4?style=for-the-badge" alt="Made by thecrewx">
-  <img src="https://img.shields.io/badge/for-vishal%20babe-cyan?style=for-the-badge" alt="For vishal babe">
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/badge/version-0.0.67-blueviolet?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/node.js-16+-339933?style=for-the-badge&logo=node.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/discord.js--selfbot--v13-3.7.1-5865F2?style=for-the-badge&logo=discord&logoColor=white" />
+  <img src="https://img.shields.io/badge/made%20by-thecrewx-ff69b4?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/for-vishal%20babe-00bcd4?style=for-the-badge" />
 </p>
 
-<h1 align="center">⚡ VC Selfbot <code>v0.0.67</code></h1>
-
-<p align="center">
-  <b>Premium multi-token Discord voice channel selfbot</b><br>
-  Control unlimited accounts. Auto-join. 24/7 crash recovery. 25+ commands.<br><br>
-  <i>made by <b>thecrewx</b> · for <b>vishal babe</b></i>
-</p>
+<h1 align="center">⚡ vc-selfbot</h1>
+<p align="center">premium multi-token discord voice channel selfbot · 24/7 · guard system</p>
+<p align="center"><i>made by <b>thecrewx</b> · for <b>vishal babe</b></i></p>
 
 ---
 
-## 📋 Requirements
-
-- **Node.js** v16 or higher → [nodejs.org](https://nodejs.org)
-- npm (bundled with Node.js)
-- One or more Discord account tokens
+## setup
 
 ```bash
-node -v   # must be v16+
-npm -v
-```
-
----
-
-## ⚙️ Setup
-
-```bash
-# 1. Clone
-git clone https://github.com/thecrewx/vc-selfbot.git
+git clone https://github.com/yourusername/vc-selfbot
 cd vc-selfbot
-
-# 2. Install dependencies
 npm install
-
-# 3. Create config
 cp .env.example .env
-
-# 4. Edit .env — add your tokens, commands, owner ID
-nano .env      # Linux/Mac
-notepad .env   # Windows
-
-# 5. Run
+# edit .env
 npm start
 ```
 
 ---
 
-## 🔧 Configuration (`.env`)
+## .env
 
 ```env
-# One token per account, comma-separated
 TOKENS=token1,token2,token3
-
-# One command name per token (same order)
 COMMANDS=bot1,bot2,bot3
-
-# Prefix
 PREFIX=!
+OWNER_ID=your_discord_user_id
 
-# Your Discord user ID (who can control bots)
-OWNER_ID=123456789012345678
-
-# ── Optional: Auto-join a VC 24/7 ──────────────
 AUTO_JOIN_GUILD_ID=
 AUTO_JOIN_VC_ID=
 
-# ── Optional: Presence ─────────────────────────
 STATUS=online
 ACTIVITY_TEXT=
 ACTIVITY_TYPE=PLAYING
 
-# ── Optional: Tweaks ───────────────────────────
 KEEPALIVE_MS=12000
 JOIN_DELAY_MS=1200
 DELETE_COMMANDS=false
 DELETE_DELAY_MS=3000
 AFK_REPLY=💤 AFK — brb
 
-# ── Optional: File logging ─────────────────────
 LOG_TO_FILE=false
 LOG_FILE=logs/bot.log
-```
 
-> 💡 Enable **Developer Mode** in Discord (Settings → Advanced → Developer Mode), then right-click your username to copy your User ID.
-
----
-
-## 🚀 Running
-
-| Method | Command | Notes |
-|--------|---------|-------|
-| **24/7 with crash recovery** | `npm start` | Recommended |
-| Direct (no crash recovery) | `node src/index.js` | Dev/testing |
-| PM2 (server / always-on) | `npm run pm2` | Best for VPS |
-
-### PM2 setup (server)
-```bash
-npm install -g pm2
-npm run pm2
-pm2 save
-pm2 startup   # auto-start on reboot
-pm2 logs vc-selfbot
+GUARD_ENABLED=false
+GUARD_VC_ID=
+GUARD_GUILD_ID=
+GUARD_DUMP_VC_ID=
+GUARD_WHITELIST=
+GUARD_MSG=true
 ```
 
 ---
 
-## 💬 Commands
+## run
 
-All commands are typed in any Discord text channel the bots can see.
-
-### 🔊 Voice
-| Command | Aliases | Description |
-|---------|---------|-------------|
-| `!join` | `!j` `!connect` `!vc` | All bots join your current VC |
-| `!joinid <id>` | `!ji` `!vcid` | All bots join VC by channel ID |
-| `!leave` | `!l` `!dc` `!disconnect` | All bots leave VC |
-| `!moveall <id>` | `!ma` `!move` | Move all bots to another VC instantly |
-| `!copycat <n>` | `!cc` | Only bot #N joins your VC |
-| `!mute` | `!selfmute` | Self-mute all bots currently in VC |
-| `!vcstatus` | `!vs` `!vcinfo` | Table showing VC status of all bots |
-
-### 🎮 Presence
-| Command | Aliases | Description |
-|---------|---------|-------------|
-| `!setstatus <s>` | `!ss` | Set status: online / idle / dnd / invisible |
-| `!setactivity <text>` | `!sa` `!playing` | Set "Playing ..." |
-| `!setstreaming <text>` | `!stream` | Set streaming status |
-| `!setlistening <text>` | `!listen` | Set "Listening to ..." |
-| `!setwatching <text>` | `!watch` | Set "Watching ..." |
-| `!clearactivity` | `!ca` | Remove activity from all bots |
-
-### 💬 Chat
-| Command | Aliases | Description |
-|---------|---------|-------------|
-| `!say <text>` | `!echo` | Send message, auto-delete command |
-| `!purge <n>` | `!clear` `!prune` | Delete your last N messages (max 100) |
-| `!snipe` | `!sn` | Show last deleted message in this channel |
-| `!afk [reason]` | — | Toggle AFK — bots auto-reply when you're mentioned |
-
-### 🛠️ Info
-| Command | Aliases | Description |
-|---------|---------|-------------|
-| `!ping` | `!p` `!latency` | Ping of all bots |
-| `!uptime` | `!up` | Uptime, join count, kicks per bot |
-| `!stats` | `!info` `!botinfo` | Full dashboard (RAM, CPU, all bots) |
-| `!serverlist` | `!sl` `!guilds` | All servers the bots are in |
-| `!serverinfo` | `!si` `!guild` | Current server info |
-| `!userinfo [@u]` | `!ui` `!whois` | User info card |
-| `!avatar [@u]` | `!av` `!pfp` | Full-size avatar URL |
-| `!token` | `!tokeninfo` | Show your masked token |
-
-### 🔧 System
-| Command | Aliases | Description |
-|---------|---------|-------------|
-| `!resetkicks` | `!rk` | Reset kick counters on all bots |
-| `!help` | `!h` `!cmds` | Show full command list |
-
-### 🎯 Per-bot
-| Command | Description |
-|---------|-------------|
-| `!bot1` | Only bot 1 joins your VC |
-| `!bot2` | Only bot 2 joins your VC |
-| `!botN` | Only bot N joins your VC |
+| | |
+|---|---|
+| 24/7 crash recovery | `npm start` |
+| direct | `node src/index.js` |
+| pm2 | `npm run pm2` |
 
 ---
 
-## ✨ Features
+## commands
 
-| Feature | Details |
-|---------|---------|
-| 🔊 **Gateway VC join** | Silent presence — no UDP/audio, prevents 15s timeout kicks |
-| 💓 **Keepalive** | Re-asserts VC presence every 12s (configurable) |
-| ⚡ **Auto-rejoin** | Detects kicks via raw gateway, rejoins with exponential backoff |
-| 🔄 **Crash recovery** | `start.js` restarts bot on any crash with cooldown on rapid failures |
-| 🎨 **Rich console UI** | Gradient banner, colored tables, timestamped logs |
-| 🗑️ **Snipe** | Logs every deleted message; `!snipe` shows the last one per channel |
-| 💤 **AFK mode** | Bots auto-reply to mentions when you're AFK, toggle on/off |
-| 🔀 **Move all** | `!moveall` moves every bot to a new VC in one command |
-| 🎯 **Copycat** | `!copycat <n>` makes just one specific bot follow you |
-| 📊 **Full stats** | Per-bot: ping, uptime, VC join count, kick count, AFK state, RAM |
-| 🔒 **Owner-only** | All commands gated to your Discord ID(s) |
-| 🧠 **Cooldowns** | Purge and join commands have debounce to prevent spam |
-| 📝 **File logging** | Mirror all output to `logs/bot.log` (optional) |
-| ✅ **Config validation** | Startup fails fast with clear plain-English error messages |
-| 🏷️ **Credits** | `made by thecrewx  •  for vishal babe` |
+### voice
+| cmd | alias | |
+|---|---|---|
+| `!join` | `j` | all bots join your vc |
+| `!joinid <id>` | `ji` | all bots join by channel id |
+| `!leave` | `l` | all bots leave vc |
+| `!move <id>` | `mv` | move all bots to another vc |
+| `!solo <n>` | `s` | only bot #n joins your vc |
+| `!vc` | `vs` | status table — who is where, kick count |
+
+### guard
+| cmd | alias | |
+|---|---|---|
+| `!guard on [vcId]` | `gd` | block non-owners from joining protected vc |
+| `!guard off` | | disable guard |
+| `!guard status` | | config + block count |
+| `!guard log` | | who was blocked and when |
+| `!guard wl <id>` | | whitelist toggle for a user |
+| `!guard dump <id>` | | vc to move blocked users to instead of disconnecting |
+
+### presence
+| cmd | alias | |
+|---|---|---|
+| `!status <s>` | `st` | online / idle / dnd / invisible |
+| `!playing <text>` | `pl` | set playing activity |
+| `!streaming <text>` | `str` | set streaming activity |
+| `!listening <text>` | `ls` | set listening activity |
+| `!watching <text>` | `wt` | set watching activity |
+| `!noactivity` | `na` | clear activity |
+
+### chat
+| cmd | alias | |
+|---|---|---|
+| `!purge <n>` | `p` | delete your last n messages (max 100) |
+| `!snipe` | `sn` | last deleted message in this channel |
+| `!afk [reason]` | | toggle afk — auto-replies to mentions |
+
+### info
+| cmd | | |
+|---|---|---|
+| `!ping` | | ws latency of all bots |
+| `!stats` | | ram · node · uptime · vc status · kick count |
+| `!help` | `h` | command list |
+
+### per-bot
+type the command name you set in `.env` while in a vc — only that bot joins.
 
 ---
 
-## 🛠️ Troubleshooting
+## features
 
-| Problem | Fix |
-|---------|-----|
-| `Missing required env var: TOKENS` | `.env` file missing or empty — check it exists |
-| `TOKENS count must match COMMANDS count` | Add one command name per token |
-| `OWNER_ID looks invalid` | Use your real numeric Discord user ID |
-| Bot doesn't respond to commands | Check prefix in `.env` and that you're listed in `OWNER_ID` |
-| Bots won't join VC | You must be inside a voice channel before typing `!join` |
-| Bots getting kicked repeatedly | Normal — auto-rejoin handles it. Increase `KEEPALIVE_MS` if needed |
-| Token invalid on login | Tokens expire. Get a fresh one from your Discord account |
-| `Cannot read properties of undefined` | Usually a stale token — re-login on that account and grab a new token |
+| | |
+|---|---|
+| gateway vc join | no udp — silent presence, no 15s timeout kicks |
+| keepalive | re-asserts every 12s so bots never idle-disconnect |
+| auto-rejoin | exponential backoff on kick: 3s → 6s → 12s → 20s cap |
+| vc guard | instantly removes non-owners who join the protected vc |
+| guard whitelist | per-user exemptions from the guard |
+| guard log | full history of every blocked join |
+| snipe | caches deleted messages per channel |
+| afk | auto-replies to anyone who mentions you |
+| purge | bulk-delete your own messages with rate-limit safety |
+| 24/7 wrapper | crash recovery with cooldown on rapid failures |
+| file logging | mirror all output to log file (optional) |
 
 ---
 
-## 📁 Project Structure
+## structure
 
 ```
 vc-selfbot/
 ├── src/
-│   ├── index.js       ← Entry point — creates bots, handles shutdown
-│   ├── bot.js         ← BotInstance class (login, VC, keepalive, AFK)
-│   ├── commands.js    ← All 25+ command handlers
-│   ├── config.js      ← Loads + validates .env
-│   ├── logger.js      ← Colored console + file logging
-│   └── banner.js      ← Startup UI (banner, config table)
-├── start.js           ← 24/7 crash recovery wrapper
-├── .env.example       ← Config template (copy to .env)
-├── .gitignore
+│   ├── index.js
+│   ├── bot.js
+│   ├── commands.js
+│   ├── guard.js
+│   ├── config.js
+│   ├── logger.js
+│   └── banner.js
+├── start.js
+├── .env.example
 ├── package.json
 └── README.md
 ```
 
 ---
 
-## ⚠️ Disclaimer
-
-Selfbots violate [Discord's Terms of Service](https://discord.com/terms). Accounts may be suspended or banned. This project is provided for **educational purposes only**. Use at your own risk. Never share your tokens.
-
----
-
-<p align="center">
-  ⚡ <b>VC Selfbot v0.0.67</b><br>
-  made with ❤️ by <b>thecrewx</b> · for <b>vishal babe</b>
-</p>
+> selfbots violate discord's tos. use at your own risk.

@@ -1,26 +1,23 @@
 {
   "name": "vc-selfbot",
   "version": "0.0.67",
-  "description": "Premium multi-token Discord VC selfbot — made by thecrewx for vishal babe",
+  "description": "premium multi-token discord vc selfbot",
   "main": "src/index.js",
   "scripts": {
     "start": "node start.js",
-    "dev": "node src/index.js",
-    "pm2": "pm2 start src/index.js --name vc-selfbot --restart-delay=5000 --max-restarts=50"
+    "dev":   "node src/index.js",
+    "pm2":   "pm2 start src/index.js --name vc-selfbot --restart-delay=5000 --max-restarts=50"
   },
-  "keywords": ["discord","selfbot","voice","vc-joiner","thecrewx"],
   "author": "thecrewx",
   "license": "MIT",
-  "engines": {
-    "node": ">=16.0.0"
-  },
+  "engines": { "node": ">=16.0.0" },
   "dependencies": {
-    "chalk": "^4.1.2",
-    "cli-table3": "^0.6.5",
-    "discord.js-selfbot-v13": "^3.7.1",
-    "dotenv": "^16.4.7",
-    "figlet": "^1.8.0",
-    "gradient-string": "^3.0.0",
-    "moment": "^2.30.1"
+    "chalk":                   "^4.1.2",
+    "cli-table3":              "^0.6.5",
+    "discord.js-selfbot-v13":  "^3.7.1",
+    "dotenv":                  "^16.4.7",
+    "figlet":                  "^1.8.0",
+    "gradient-string":         "^3.0.0",
+    "moment":                  "^2.30.1"
   }
 }
