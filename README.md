@@ -12,6 +12,17 @@
 
 ---
 
+## 📋 Requirements
+
+- **Node.js** v16 or higher → [nodejs.org](https://nodejs.org)
+- npm (bundled with Node.js)
+- One or more Discord account tokens
+
+```bash
+node -v   # must be v16+
+npm -v
+```
+
 ## setup
 
 ```bash
@@ -157,5 +168,16 @@ vc-selfbot/
 ```
 
 ---
+
+## ⚠️ Disclaimer
+
+Selfbots violate [Discord's Terms of Service](https://discord.com/terms). Accounts may be suspended or banned. This project is provided for **educational purposes only**. Use at your own risk. Never share your tokens.
+
+---
+
+<p align="center">
+  ⚡ <b>VC Selfbot v0.0.67</b><br>
+  made with ❤️ by <b>thecrewx</b> · for <b>vishal babe</b>
+</p>
 
 > selfbots violate discord's tos. use at your own risk.
