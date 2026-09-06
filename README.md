@@ -7,21 +7,13 @@
 </p>
 
 <h1 align="center">⚡ vc-selfbot</h1>
-<p align="center">premium multi-token discord voice channel selfbot · 24/7 · guard system</p>
-<p align="center"><i>made by <b>thecrewx</b> · for <b>vishal babe</b></i></p>
+<p align="center">
+  premium multi-token discord voice channel selfbot<br>
+  24/7 crash recovery  ·  vc guard  ·  exponential backoff rejoin
+</p>
+<p align="center"><sub>made by <b>thecrewx</b>  ·  for <b>vishal babe</b>  ·  v0.0.67</sub></p>
 
 ---
-
-## 📋 Requirements
-
-- **Node.js** v16 or higher → [nodejs.org](https://nodejs.org)
-- npm (bundled with Node.js)
-- One or more Discord account tokens
-
-```bash
-node -v   # must be v16+
-npm -v
-```
 
 ## setup
 
@@ -30,7 +22,7 @@ git clone https://github.com/yourusername/vc-selfbot
 cd vc-selfbot
 npm install
 cp .env.example .env
-# edit .env
+# edit .env with your values
 npm start
 ```
 
@@ -39,27 +31,35 @@ npm start
 ## .env
 
 ```env
+# required
 TOKENS=token1,token2,token3
 COMMANDS=bot1,bot2,bot3
 PREFIX=!
 OWNER_ID=your_discord_user_id
 
+# auto-join a vc on startup (optional)
 AUTO_JOIN_GUILD_ID=
 AUTO_JOIN_VC_ID=
 
+# presence (optional)
 STATUS=online
 ACTIVITY_TEXT=
 ACTIVITY_TYPE=PLAYING
 
+# timing
 KEEPALIVE_MS=12000
 JOIN_DELAY_MS=1200
+
+# behaviour
 DELETE_COMMANDS=false
 DELETE_DELAY_MS=3000
 AFK_REPLY=💤 AFK — brb
 
+# logging
 LOG_TO_FILE=false
 LOG_FILE=logs/bot.log
 
+# guard (optional — can also be toggled with !guard on/off)
 GUARD_ENABLED=false
 GUARD_VC_ID=
 GUARD_GUILD_ID=
@@ -68,15 +68,17 @@ GUARD_WHITELIST=
 GUARD_MSG=true
 ```
 
+> one token per account. one command name per token. same order.
+
 ---
 
 ## run
 
-| | |
-|---|---|
-| 24/7 crash recovery | `npm start` |
-| direct | `node src/index.js` |
-| pm2 | `npm run pm2` |
+```bash
+npm start          # 24/7 with crash recovery  (recommended)
+node src/index.js  # direct, no recovery
+npm run pm2        # pm2 — best for vps
+```
 
 ---
 
@@ -85,22 +87,22 @@ GUARD_MSG=true
 ### voice
 | cmd | alias | |
 |---|---|---|
-| `!join` | `j` | all bots join your vc |
+| `!join` | `j` | all bots join your current vc |
 | `!joinid <id>` | `ji` | all bots join by channel id |
-| `!leave` | `l` | all bots leave vc |
-| `!move <id>` | `mv` | move all bots to another vc |
+| `!leave` | `l` | all bots disconnect |
+| `!move <id>` | `mv` | move all bots to a different vc |
 | `!solo <n>` | `s` | only bot #n joins your vc |
-| `!vc` | `vs` | status table — who is where, kick count |
+| `!vc` | `vs` | status table — who is where, kick counts |
 
 ### guard
 | cmd | alias | |
 |---|---|---|
-| `!guard on [vcId]` | `gd` | block non-owners from joining protected vc |
+| `!guard on [vcId]` | `gd` | enable — block non-owners from joining vc |
 | `!guard off` | | disable guard |
-| `!guard status` | | config + block count |
-| `!guard log` | | who was blocked and when |
-| `!guard wl <id>` | | whitelist toggle for a user |
-| `!guard dump <id>` | | vc to move blocked users to instead of disconnecting |
+| `!guard status` | | config + total block count |
+| `!guard log` | | last blocked users |
+| `!guard wl <id>` | | toggle whitelist for a user id |
+| `!guard dump <id>` | | vc to move blocked users into (default: disconnect) |
 
 ### presence
 | cmd | alias | |
@@ -123,29 +125,27 @@ GUARD_MSG=true
 | cmd | | |
 |---|---|---|
 | `!ping` | | ws latency of all bots |
-| `!stats` | | ram · node · uptime · vc status · kick count |
+| `!stats` | | ram · node · uptime · vc status · kick count · guard |
 | `!help` | `h` | command list |
 
 ### per-bot
-type the command name you set in `.env` while in a vc — only that bot joins.
+type the command name from `.env` while in a vc — only that bot joins.  
+example: if `COMMANDS=alpha,beta,gamma` then `!alpha` joins only the first bot.
 
 ---
 
-## features
+## how it works
 
 | | |
 |---|---|
-| gateway vc join | no udp — silent presence, no 15s timeout kicks |
-| keepalive | re-asserts every 12s so bots never idle-disconnect |
-| auto-rejoin | exponential backoff on kick: 3s → 6s → 12s → 20s cap |
-| vc guard | instantly removes non-owners who join the protected vc |
-| guard whitelist | per-user exemptions from the guard |
-| guard log | full history of every blocked join |
-| snipe | caches deleted messages per channel |
-| afk | auto-replies to anyone who mentions you |
-| purge | bulk-delete your own messages with rate-limit safety |
-| 24/7 wrapper | crash recovery with cooldown on rapid failures |
-| file logging | mirror all output to log file (optional) |
+| **gateway join** | sends discord op 4 directly — no udp, no audio, no 15s timeout kicks |
+| **keepalive** | re-asserts presence on a timer so bots never idle-disconnect |
+| **auto-rejoin** | exponential backoff on kick: 3s → 6s → 12s → 20–28s cap |
+| **guard** | voiceStateUpdate listener — removes non-owners the instant they enter the protected vc. works with `!guard on/off` at runtime without restart |
+| **snipe** | messageDelete listener caches per channel — `!snipe` always shows the most recent |
+| **afk** | all bot accounts auto-reply to anyone who mentions you while afk is active |
+| **purge** | deletes your own messages with a rate-limit safe delay between each |
+| **crash recovery** | `start.js` restarts on any exit, exponential cooldown on rapid crashes |
 
 ---
 
@@ -154,14 +154,14 @@ type the command name you set in `.env` while in a vc — only that bot joins.
 ```
 vc-selfbot/
 ├── src/
-│   ├── index.js
-│   ├── bot.js
-│   ├── commands.js
-│   ├── guard.js
-│   ├── config.js
-│   ├── logger.js
-│   └── banner.js
-├── start.js
+│   ├── index.js      main — wires everything, handles shutdown
+│   ├── bot.js        BotInstance class — login, vc, keepalive, afk
+│   ├── commands.js   command router — all commands
+│   ├── guard.js      vc guard — block non-owners
+│   ├── config.js     env loader + validation
+│   ├── logger.js     aligned console + file output
+│   └── banner.js     startup ui
+├── start.js          24/7 crash recovery wrapper
 ├── .env.example
 ├── package.json
 └── README.md
@@ -169,15 +169,4 @@ vc-selfbot/
 
 ---
 
-## ⚠️ Disclaimer
-
-Selfbots violate [Discord's Terms of Service](https://discord.com/terms). Accounts may be suspended or banned. This project is provided for **educational purposes only**. Use at your own risk. Never share your tokens.
-
----
-
-<p align="center">
-  ⚡ <b>VC Selfbot v0.0.67</b><br>
-  made with ❤️ by <b>thecrewx</b> · for <b>vishal babe</b>
-</p>
-
-> selfbots violate discord's tos. use at your own risk.
+> selfbots violate discord's [terms of service](https://discord.com/terms). use at your own risk.

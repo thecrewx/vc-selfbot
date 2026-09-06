@@ -10,41 +10,55 @@ const { setupGuard }       = require('./guard');
 const rand  = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
 const sleep = ms     => new Promise(r => setTimeout(r, ms));
 
-printBanner();
+const IGNORE = [
+  'WebSocket was closed before',
+  'Connection not established',
+  'read ECONNRESET',
+];
 
-const instances = cfg.tokens.map((token, i) => new BotInstance(token, cfg.commands[i], i));
+async function main() {
+  printBanner();
 
-for (const inst of instances) {
-  registerCommands(inst, instances);
-  setupGuard(inst, instances);
-}
+  const instances = cfg.tokens.map(
+    (token, i) => new BotInstance(token, cfg.commands[i], i)
+  );
 
-(async () => {
+  // register commands and guard on every instance
+  for (const inst of instances) {
+    registerCommands(inst, instances);
+    setupGuard(inst, instances);
+  }
+
+  // staggered login — avoids simultaneous login rate-limits
   log.system(`starting ${instances.length} instance(s)`);
   log.div();
+
   for (let i = 0; i < instances.length; i++) {
     if (i > 0) await sleep(rand(800, 2000));
     instances[i].login();
   }
-})();
 
-const shutdown = sig => {
-  log.system(`${sig}  —  shutting down`);
-  instances.forEach(i => { try { i.destroy(); } catch {} });
-  setTimeout(() => process.exit(0), 1500);
-};
+  // graceful shutdown
+  const shutdown = sig => {
+    log.blank();
+    log.system(`${sig}  —  shutting down`);
+    instances.forEach(i => { try { i.destroy(); } catch {} });
+    setTimeout(() => process.exit(0), 1500);
+  };
 
-process.on('SIGINT',  () => shutdown('SIGINT'));
-process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT',  () => shutdown('SIGINT'));
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+}
 
-const IGNORE = ['WebSocket was closed before', 'Connection not established', 'read ECONNRESET'];
-
+// global safety net — keep process alive on non-fatal errors
 process.on('unhandledRejection', e => {
-  const m = e?.message || String(e);
+  const m = e?.message ?? String(e);
   if (!IGNORE.some(s => m.includes(s))) log.error('process', `unhandledRejection  ${m}`);
 });
 
 process.on('uncaughtException', e => {
-  const m = e?.message || String(e);
+  const m = e?.message ?? String(e);
   if (!IGNORE.some(s => m.includes(s))) log.error('process', `uncaughtException  ${m}`);
 });
+
+main();
