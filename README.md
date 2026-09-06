@@ -170,3 +170,8 @@ vc-selfbot/
 ---
 
 > selfbots violate discord's [terms of service](https://discord.com/terms). use at your own risk.
+
+<p align="center">
+  ⚡ <b>VC Selfbot v0.0.67</b><br>
+  made with ❤️ by <b>thecrewx</b> · for <b>vishal babe</b>
+</p>
